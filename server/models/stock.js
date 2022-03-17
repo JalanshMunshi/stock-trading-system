@@ -2,25 +2,24 @@ const { DataTypes } = require("sequelize/types");
 
 const db = require('.');
 
-const Portfolio = db.define('portfolio', {
-    username: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-            notEmpty: true,
-        },
-        foreignKey: true
-    },
+const Stock = db.define('stock', {
     symbol: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false,
         validate: {
             notEmpty: true,
-        },
-        foreignKey: true
+        }
     },
-    shares: {
-        type: DataTypes.FLOAT,
+    companyName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
+    },
+    volume: {
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     price: {
@@ -29,4 +28,4 @@ const Portfolio = db.define('portfolio', {
     }
 });
 
-module.exports = Portfolio;
+module.exports = Stock;
