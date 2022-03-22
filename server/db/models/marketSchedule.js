@@ -33,4 +33,6 @@ const MarketSchedule = db.define('marketSchedule', {
     },
 });
 
+MarketSchedule.removeAttribute('id');
+
 module.exports = MarketSchedule;

@@ -3,13 +3,18 @@ const { DataTypes } = require("sequelize/types");
 const db = require('.');
 
 const Stock = db.define('stock', {
+    stock_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
     symbol: {
         type: DataTypes.STRING,
         unique: true,
         allowNull: false,
         validate: {
             notEmpty: true,
-        }
+        },
     },
     companyName: {
         type: DataTypes.STRING,

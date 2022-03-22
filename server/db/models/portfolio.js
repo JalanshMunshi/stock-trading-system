@@ -4,39 +4,25 @@ const db = require('.');
 const Stock = require("./stock");
 const User = require("./user");
 
-const Transaction = db.define('transaction', {
-    id: {
+const Portfolio = db.define('portfolio', {
+    portfolio_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
     },
     username: {
         type: DataTypes.STRING,
-        references: {
-            model: User,
-            key: 'username',
-            deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
         }
     },
     symbol: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
         validate: {
             notEmpty: true,
-        },
-        references: {
-            model: Stock,
-            key: 'symbol',
-            deferrable: Sequelize.Deferrable.INITIALLY_IMMEDIATE,
         }
-    },
-    transactionType: {
-        type: DataTypes.ENUM('buy', 'sell'),
-        allowNull: false,
-        validate: {
-            notEmpty: true,
-        },
     },
     shares: {
         type: DataTypes.FLOAT,
@@ -45,7 +31,7 @@ const Transaction = db.define('transaction', {
     price: {
         type: DataTypes.FLOAT,
         allowNull: false,
-    },
+    }
 });
 
-module.exports = Transaction;
+module.exports = Portfolio;

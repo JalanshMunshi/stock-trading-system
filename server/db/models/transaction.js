@@ -1,23 +1,36 @@
 const { DataTypes } = require("sequelize/types");
 
 const db = require('.');
+const Stock = require("./stock");
+const User = require("./user");
 
-const Portfolio = db.define('portfolio', {
+const Transaction = db.define('transaction', {
+    transaction_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
     username: {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
             notEmpty: true,
-        },
-        foreignKey: true
+        }
     },
     symbol: {
         type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
+    },
+    transactionType: {
+        type: DataTypes.ENUM('buy', 'sell'),
         allowNull: false,
         validate: {
             notEmpty: true,
         },
-        foreignKey: true
     },
     shares: {
         type: DataTypes.FLOAT,
@@ -26,7 +39,7 @@ const Portfolio = db.define('portfolio', {
     price: {
         type: DataTypes.FLOAT,
         allowNull: false,
-    }
+    },
 });
 
-module.exports = Portfolio;
+module.exports = Transaction;

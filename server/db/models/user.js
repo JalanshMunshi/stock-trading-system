@@ -3,9 +3,13 @@ const { DataTypes } = require("sequelize/types");
 const db = require('.');
 
 const User = db.define('user', {
+    user_id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+    },
     username: {
         type: DataTypes.STRING,
-        primaryKey: true,
         unique: true,
         allowNull: false,
         validate: {
