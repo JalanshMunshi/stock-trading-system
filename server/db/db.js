@@ -13,6 +13,4 @@ const db = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   }
 });
 
-console.log('Connected to DB...');
-
 module.exports = db;

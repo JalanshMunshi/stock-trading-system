@@ -1,6 +1,6 @@
-const { DataTypes } = require("sequelize/types");
+const { DataTypes } = require("sequelize");
 
-const db = require('.');
+const db = require('../db');
 
 const Stock = db.define('stock', {
     stock_id: {

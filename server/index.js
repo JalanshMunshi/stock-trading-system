@@ -11,11 +11,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Get the db
 const db = require('./db');
-db.sequelize.sync();
+db.sync();
 
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
 // });
+
+console.log('Connected to DB...');
 
 const PORT = process.env.PORT || 5000;
 

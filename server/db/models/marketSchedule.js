@@ -1,6 +1,6 @@
-const { DataTypes } = require("sequelize/types");
+const { DataTypes } = require("sequelize");
 
-const db = require('.');
+const db = require('../db');
 
 const MarketSchedule = db.define('marketSchedule', {
     Monday: {
