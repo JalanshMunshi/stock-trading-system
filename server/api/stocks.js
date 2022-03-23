@@ -20,5 +20,3 @@ router.post('/buy', async (req, res, next) => {
 router.post('/admin/create-new-stock', async (req, res, next) => {
     // add Company name, stock ticker, volume, and initial price.
 });
-
-
