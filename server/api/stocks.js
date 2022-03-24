@@ -19,7 +19,7 @@ router.post('/buy', async (req, res, next) => {
         });
         if(user === null) {
             res.status(400).json({
-                message: 'You must be a registered user carry out a transaction.',
+                message: 'You must be a registered user to carry out a transaction.',
                 code: 400
             });
         }
@@ -108,7 +108,7 @@ router.post('/sell', async (req, res, next) => {
         });
         if(user === null) {
             res.status(400).json({
-                message: 'You must be a registered user carry out a transaction.',
+                message: 'You must be a registered user to carry out a transaction.',
                 code: 400
             });
         }
@@ -210,7 +210,7 @@ router.post('/admin/create-new-stock', async (req, res, next) => {
             message: 'New stock added successfully.',
             code: 200
         });
-    } catch {
+    } catch(err) {
         next(err);
     }
 });

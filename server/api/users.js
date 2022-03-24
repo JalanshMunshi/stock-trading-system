@@ -15,7 +15,7 @@ router.post('/create-new-user', async (req, res, next) => {
             password: req.body.password,
         });
         res.status(200).json(newUser);
-    } catch {
+    } catch(err) {
         next(err);
     }
 });
@@ -46,7 +46,7 @@ router.post('/deposit-cash', async (req, res, next) => {
             message: 'Cash deposited succesfully!',
             code: 200
         });
-    } catch {
+    } catch(err) {
         next(err);
     }
 });
@@ -89,7 +89,7 @@ router.post('/withdraw-cash', async (req, res, next) => {
             message: 'Cash deposited succesfully!',
             code: 200
         });
-    } catch {
+    } catch(err) {
         next(err);
     }
 });

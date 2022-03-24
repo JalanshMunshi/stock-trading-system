@@ -31,7 +31,7 @@ router.post('/admin/change-market-hours', async (req, res, next) => {
             message: 'Market hours changed successfully.',
             code: 200,
         });
-    } catch {
+    } catch(err) {
         next(err);
     }
 });
@@ -61,7 +61,7 @@ router.post('/admin/change-market-schedule', async (req, res, next) => {
             message: 'Market hours changed successfully.',
             code: 200,
         });
-    } catch {
+    } catch(err) {
         next(err);
     }
 });
