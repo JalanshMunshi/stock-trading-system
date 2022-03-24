@@ -25,10 +25,6 @@ const Portfolio = db.define('portfolio', {
     shares: {
         type: DataTypes.FLOAT,
         allowNull: false,
-    },
-    price: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
     }
 });
 
