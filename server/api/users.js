@@ -33,14 +33,18 @@ router.post('/deposit-cash', async (req, res, next) => {
         });
         if(user === null) {
             console.log(`User not found: ${email}`);
-            res.status(404).send('The user does not exist. ');
+            res.status(404).send({
+                message: 'The user does not exist.',
+                code: 404
+            });
         }
         await user.update({
             cashBalance: cashToDeposit,
         });
         await user.save();
         res.status(200).json({
-            message: 'Cash deposited succesfully!'
+            message: 'Cash deposited succesfully!',
+            code: 200
         });
     } catch {
         next(err);
@@ -63,14 +67,16 @@ router.post('/withdraw-cash', async (req, res, next) => {
         if(user === null) {
             console.log(`User not found: ${email}`);
             res.status(404).json({
-                message: 'The user does not exist.'
+                message: 'The user does not exist.',
+                code: 404
             });
         }
         // Check if funds are sufficient
         const currentBalance = user.cashBalance;
         if(cashToWithdraw > currentBalance) {
             res.status(400).json({
-                message: 'Insufficient funds in your wallet.'
+                message: 'Insufficient funds in your wallet.',
+                code: 400
             });
         }
         // Update balance
@@ -80,7 +86,8 @@ router.post('/withdraw-cash', async (req, res, next) => {
         });
         await user.save();
         res.status(200).json({
-            message: 'Cash deposited succesfully!'
+            message: 'Cash deposited succesfully!',
+            code: 200
         });
     } catch {
         next(err);
