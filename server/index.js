@@ -40,7 +40,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/auth', require('./auth'));
+// app.use('/auth', require('./auth'));
+app.use('/api', require('./api'));
 
 // Get the db
 db.sync();
