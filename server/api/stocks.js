@@ -18,9 +18,9 @@ router.post('/buy', async (req, res, next) => {
             }
         });
         if(user === null) {
-            res.status(400).json({
+            res.status(401).json({
                 message: 'You must be a registered user to carry out a transaction.',
-                code: 400
+                code: 401
             });
         }
         // Check if the stock symbol exists in the DB
@@ -107,9 +107,9 @@ router.post('/sell', async (req, res, next) => {
             }
         });
         if(user === null) {
-            res.status(400).json({
+            res.status(401).json({
                 message: 'You must be a registered user to carry out a transaction.',
-                code: 400
+                code: 401
             });
         }
         // Check if the stock symbol exists in the DB
