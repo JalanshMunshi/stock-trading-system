@@ -1,5 +1,7 @@
-import { Table } from 'antd';
+import { Table, Typography } from 'antd';
 import React from 'react';
+
+const { Title } = Typography;
 
 const ShowStocks = () => {
 
@@ -52,6 +54,7 @@ const ShowStocks = () => {
 
   return (
     <>
+      <Title style={{textAlign:'left'}}>Stocks</Title>
       <Table columns={columns} dataSource={data}/>
     </>
   );

@@ -188,9 +188,14 @@ router.post('/admin/create-new-stock', async (req, res, next) => {
         const symbol = req.body.symbol;
         const volume = req.body.volume;
         const initialPrice = req.body.initialPrice;
-        const stock = Stock.findOne({
+        const stock = null;
+        await Stock.findOne({
             where: {
                 symbol: symbol
+            }
+        }).then(data => {
+            if(data !== null) {
+                stock = data.dataValues;
             }
         });
         // Check if the symbol already exists or not. 
