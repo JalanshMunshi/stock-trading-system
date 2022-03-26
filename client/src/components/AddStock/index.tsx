@@ -1,5 +1,7 @@
 import React from 'react';
 import { Form, Input, Button, Typography, message } from 'antd';
+import axios from 'axios';
+import { URL_PREFIX } from '../../App';
 
 const { Title } = Typography;
 
@@ -7,7 +9,7 @@ interface Stock {
   symbol: string,
   companyName: string,
   volume: number,
-  price: number,
+  initialPrice: number,
 };
 
 function AddStock() {
@@ -15,9 +17,14 @@ function AddStock() {
   const [form] = Form.useForm();
 
   const publishStock = (stock: Stock) => {
-    console.log('Success:', stock);
-    form.resetFields();
-    message.success('Stock added successfully.');
+    // console.log(stock);
+    axios.post(`${URL_PREFIX}/api/stocks/admin/create-new-stock`, stock).then((res) => {
+      message.success(res.data.message)
+    }).catch((err) => {
+      console.log(err);
+      message.error('The stock could not be added.');
+    });
+    // form.resetFields();
   };
 
   return (
@@ -56,7 +63,7 @@ function AddStock() {
         </Form.Item>
         <Form.Item
           label="Initial Price"
-          name="price"
+          name="initialPrice"
           rules={[{ required: true, message: 'Please enter the initial price.' }]}
           style={{width:'30%'}}
         >

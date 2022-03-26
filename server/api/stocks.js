@@ -188,7 +188,7 @@ router.post('/admin/create-new-stock', async (req, res, next) => {
         const symbol = req.body.symbol;
         const volume = req.body.volume;
         const initialPrice = req.body.initialPrice;
-        const stock = null;
+        var stock = null;
         await Stock.findOne({
             where: {
                 symbol: symbol
@@ -200,9 +200,7 @@ router.post('/admin/create-new-stock', async (req, res, next) => {
         });
         // Check if the symbol already exists or not. 
         if(stock !== null) {
-            res.status(400).json({
-                message: 'The symbol already exists. Please choose a different symbol.',
-            });
+            res.status(400).send('The symbol already exists. Please choose a different symbol.');
         }
         const newStock = await Stock.create({
             symbol: symbol,

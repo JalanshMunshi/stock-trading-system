@@ -7,6 +7,7 @@ import ShowStocks from './components/ShowStocks';
 
 const { Header, Footer, Sider, Content } = Layout;
 const { SubMenu } = Menu;
+export const URL_PREFIX = 'http://localhost:5000';
 
 function App() {
   return (
@@ -50,8 +51,8 @@ function App() {
                 minHeight: 280,
               }}
             >
-              {/* <AddStock /> */}
-              <ShowStocks/>
+              <AddStock />
+              {/* <ShowStocks/> */}
             </Content>
           </Layout>
         </Layout>
