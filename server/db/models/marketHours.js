@@ -14,5 +14,7 @@ const MarketHours = db.define('marketHours', {
 });
 
 MarketHours.removeAttribute('id');
+MarketHours.removeAttribute('createdAt');
+MarketHours.removeAttribute('updatedAt');
 
 module.exports = MarketHours;

@@ -6,6 +6,7 @@ const session = require('express-session');
 const passport = require('passport');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const db = require('./db');
+const { MarketHours, MarketSchedule } = require('./db/models');
 const sessionStore = new SequelizeStore({db});
 
 module.exports = app;
@@ -44,7 +45,30 @@ app.use(passport.session());
 app.use('/api', require('./api'));
 
 // Get the db
-db.sync();
+db.sync().then(() => {
+    MarketHours.findAll().then((data) => {
+        if(data.length === 0) {
+            MarketHours.create({
+                startTime: '08:00:00',
+                endTime: '17:00:00',
+            });
+        }
+    });
+    
+    MarketSchedule.findAll().then(data => {
+        if(data.length === 0) {
+            MarketSchedule.create({
+                Monday: true,
+                Tuesday: true,
+                Wednesday: true,
+                Thursday: true,
+                Friday: true,
+                Saturday: false,
+                Sunday: false,
+            });
+        }
+    });
+});
 
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
