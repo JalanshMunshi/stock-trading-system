@@ -4,10 +4,11 @@ import { Layout, Menu } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import AddStock from './components/AddStock';
 import ShowStocks from './components/ShowStocks';
+import MarketHours from './components/MarketHours';
 
 const { Header, Footer, Sider, Content } = Layout;
 const { SubMenu } = Menu;
-export const URL_PREFIX = 'http://localhost:5000';
+export const URL_PREFIX = 'http://localhost:5000/api';
 
 function App() {
   return (
@@ -51,8 +52,9 @@ function App() {
                 minHeight: 280,
               }}
             >
-              <AddStock />
+              {/* <AddStock /> */}
               {/* <ShowStocks/> */}
+              <MarketHours/>
             </Content>
           </Layout>
         </Layout>

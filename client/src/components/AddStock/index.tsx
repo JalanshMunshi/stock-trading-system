@@ -18,10 +18,9 @@ function AddStock() {
 
   const publishStock = (stock: Stock) => {
     // console.log(stock);
-    axios.post(`${URL_PREFIX}/api/stocks/admin/create-new-stock`, stock).then((res) => {
+    axios.post(`${URL_PREFIX}/stocks/admin/create-new-stock`, stock).then((res) => {
       message.success(res.data.message)
     }).catch((err) => {
-      console.log(err);
       message.error('The stock could not be added.');
     });
     // form.resetFields();
