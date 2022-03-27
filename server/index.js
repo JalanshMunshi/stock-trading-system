@@ -6,7 +6,7 @@ const session = require('express-session');
 const passport = require('passport');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const db = require('./db');
-const { MarketHours, MarketSchedule } = require('./db/models');
+const { MarketHours, MarketSchedule, User } = require('./db/models');
 const sessionStore = new SequelizeStore({db});
 
 module.exports = app;
@@ -46,6 +46,22 @@ app.use('/api', require('./api'));
 
 // Get the db
 db.sync().then(() => {
+    User.findOne({
+        where: {
+            email: 'admin@stockup.com'
+        }
+    }).then(data => {
+        if(data === null) {
+            User.create({
+                username: 'admin',
+                fullName: 'Jalansh Munshi',
+                email: 'admin@stockup.com',
+                password: 'admin',
+                role: 'admin'
+            });
+        }
+    })
+
     MarketHours.findAll().then((data) => {
         if(data.length === 0) {
             MarketHours.create({
@@ -70,7 +86,7 @@ db.sync().then(() => {
     });
 });
 
-// db.sequelize.sync({ force: true }).then(() => {
+// db.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
 // });
 

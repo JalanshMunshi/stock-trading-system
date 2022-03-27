@@ -5,6 +5,7 @@ import { UserOutlined } from '@ant-design/icons';
 import AddStock from './components/AddStock';
 import ShowStocks from './components/ShowStocks';
 import MarketHours from './components/MarketHours';
+import MarketSchedule from './components/MarketSchedule';
 
 const { Header, Footer, Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -54,7 +55,8 @@ function App() {
             >
               {/* <AddStock /> */}
               {/* <ShowStocks/> */}
-              <MarketHours/>
+              {/* <MarketHours/> */}
+              <MarketSchedule/>
             </Content>
           </Layout>
         </Layout>
