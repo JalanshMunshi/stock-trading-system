@@ -62,6 +62,30 @@ db.sync().then(() => {
         }
     });
 
+    User.findAll({
+        where: {
+            role: 'customer'
+        }
+    }).then(data => {
+        console.log(data);
+        if(data.length == 0) {
+            User.create({
+                username: 'user1',
+                fullName: 'Rob Brown',
+                email: 'user1@gmail.com',
+                password: 'user1',
+                role: 'customer',
+            });
+            User.create({
+                username: 'user2',
+                fullName: 'Mary Jones',
+                email: 'user2@gmail.com',
+                password: 'user2',
+                role: 'customer',
+            });
+        }
+    });
+
     Stock.findAll().then(data => {
         if(data.length === 0) {
             Stock.create({

@@ -2,10 +2,11 @@ import { Table, Typography } from 'antd';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { URL_PREFIX } from '../../App';
+import ShowStockModal from '../ShowStockModal';
 
 const { Title } = Typography;
 
-interface Stock {
+export interface Stock {
   key: String;
   symbol: String;
   price: Number;
@@ -16,6 +17,8 @@ interface Stock {
 const ShowStocks = () => {
 
   const [stockData, setStockData] = useState<Stock[] | undefined>(undefined);
+  const [showStockModal, setShowStockModal] = useState<boolean>(false);
+  const [modalStock, setModalStock] = useState<Stock>();
   const columns = [
     {
       title: 'Symbol',
@@ -51,8 +54,26 @@ const ShowStocks = () => {
 
   return (
     <>
+      <ShowStockModal 
+        showModal={showStockModal}
+        setShowStockModal={setShowStockModal}
+        stock={modalStock}
+      />
       <Title style={{textAlign:'left'}}>Stocks</Title>
-      <Table columns={columns} dataSource={stockData} pagination={false} style={{ width:'50%' }}/>
+      <Table
+        columns={columns}
+        dataSource={stockData}
+        pagination={false}
+        style={{ width:'50%' }}
+        onRow={(record, rowIndex) => {
+          return {
+            onClick: () => {
+              setModalStock(record);
+              setShowStockModal(true);
+            }
+          }
+        }}
+      />
     </>
   );
 };
