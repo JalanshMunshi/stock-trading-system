@@ -54,9 +54,9 @@ function App() {
               }}
             >
               {/* <AddStock /> */}
-              {/* <ShowStocks/> */}
+              <ShowStocks/>
               {/* <MarketHours/> */}
-              <MarketSchedule/>
+              {/* <MarketSchedule/> */}
             </Content>
           </Layout>
         </Layout>

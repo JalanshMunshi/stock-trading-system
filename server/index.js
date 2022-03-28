@@ -6,7 +6,7 @@ const session = require('express-session');
 const passport = require('passport');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const db = require('./db');
-const { MarketHours, MarketSchedule, User } = require('./db/models');
+const { MarketHours, MarketSchedule, User, Stock } = require('./db/models');
 const sessionStore = new SequelizeStore({db});
 
 module.exports = app;
@@ -58,6 +58,29 @@ db.sync().then(() => {
                 email: 'admin@stockup.com',
                 password: 'admin',
                 role: 'admin'
+            });
+        }
+    });
+
+    Stock.findAll().then(data => {
+        if(data.length === 0) {
+            Stock.create({
+                symbol: 'AA',
+                companyName: 'company1',
+                volume: 1000,
+                price: 10.5,
+            });
+            Stock.create({
+                symbol: 'BB',
+                companyName: 'company2',
+                volume: 2000,
+                price: 15.5,
+            });
+            Stock.create({
+                symbol: 'CC',
+                companyName: 'company3',
+                volume: 1500,
+                price: 20.12,
             });
         }
     })

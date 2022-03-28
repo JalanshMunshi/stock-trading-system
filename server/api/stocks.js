@@ -3,6 +3,42 @@ const { Stock, User, Portfolio, Transaction } = require('../db/models');
 const router = require('express').Router();
 module.exports = router;
 
+router.get('/get-stocks', async (req, res, next) => {
+    try {
+        var stocks = [];
+        await Stock.findAll({
+            order: [
+                ['symbol', 'ASC']
+            ],
+            attributes: [
+                'symbol',
+                'companyName',
+                'volume',
+                'price',
+            ]
+        }).then(data => {
+            // console.log(data)
+            var key = 1;
+            data.forEach(dp => {
+                var stock = {};
+                stock.key = key.toString();
+                stock.symbol = dp.dataValues.symbol;
+                stock.price = dp.dataValues.price;
+                stock.volume = dp.dataValues.volume;
+                stock.marketCap = dp.dataValues.volume * dp.dataValues.price;
+                stocks.push(stock);
+                key += 1;
+            });
+            // console.log(stocks);
+        });
+        res.status(200).send({
+            stocks
+        });
+    } catch (err) {
+        next(err);
+    }
+})
+
 // Buy stock
 // Request must have email, symbol, quantity of shares, transaction type
 router.post('/buy', async (req, res, next) => {
