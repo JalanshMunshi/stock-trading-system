@@ -26,20 +26,27 @@ router.post('/deposit-cash', async (req, res, next) => {
     // Add cash to wallet
     try {
         const email = req.body.email, cashToDeposit = req.body.cash;
-        const user = User.findOne({
+        const user = await User.findOne({
             where: {
                 email: email,
             }
         });
         if(user === null) {
             console.log(`User not found: ${email}`);
-            res.status(404).send({
-                message: 'The user does not exist.',
-                code: 404
+            res.status(401).send({
+                message: 'You need to be registered to add cash.',
+                code: 401
             });
         }
+        if(cashToDeposit <= 0) {
+            res.status(400).send({
+                message: 'Please enter a valid amount.',
+                code: 400
+            });
+        }
+        const newBalance = parseFloat(user.cashBalance) + parseFloat(cashToDeposit);
         await user.update({
-            cashBalance: cashToDeposit,
+            cashBalance: newBalance,
         });
         await user.save();
         res.status(200).json({

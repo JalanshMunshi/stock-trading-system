@@ -6,6 +6,7 @@ import AddStock from './components/AddStock';
 import ShowStocks from './components/ShowStocks';
 import MarketHours from './components/MarketHours';
 import MarketSchedule from './components/MarketSchedule';
+import DepositCash from './components/DepositCash';
 
 const { Header, Footer, Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -54,9 +55,10 @@ function App() {
               }}
             >
               {/* <AddStock /> */}
-              <ShowStocks/>
+              {/* <ShowStocks/> */}
               {/* <MarketHours/> */}
               {/* <MarketSchedule/> */}
+              <DepositCash/>
             </Content>
           </Layout>
         </Layout>
