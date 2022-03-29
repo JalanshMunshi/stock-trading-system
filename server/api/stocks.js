@@ -48,10 +48,14 @@ router.post('/buy', async (req, res, next) => {
     try {
         // User must be registered.
         const email = req.body.email;
-        const user = User.findOne({
+        var user;
+        await User.findOne({
             where: {
                 email: email,
             }
+        }).then(data => {
+            // console.log(data)
+            user = data.dataValues;
         });
         if(user === null) {
             res.status(401).json({
@@ -61,10 +65,13 @@ router.post('/buy', async (req, res, next) => {
         }
         // Check if the stock symbol exists in the DB
         const symbol = req.body.symbol;
-        const stock = Stock.findOne({
+        var stock;
+        await Stock.findOne({
             where: {
                 symbol: symbol,
             }
+        }).then(data => {
+            stock = data.dataValues;
         });
         if(stock === null) {
             res.status(400).json({
@@ -74,33 +81,48 @@ router.post('/buy', async (req, res, next) => {
         }
         const currentPrice = stock.price;
         const userBalance = user.cashBalance;
-        const shares = req.body.shares;
+        const amount = req.body.amount;
+        // Error check for negative or 0 amount.
+        if(amount <= 0) {
+            res.status(400).json({
+                message: 'Please enter a valid amount.',
+                code: 400
+            });
+        }
+        const numberOfShares = amount / currentPrice;
         // User must have sufficient balance to carry out this transaction.
-        if(userBalance < currentPrice * shares) {
+        if(userBalance < amount) {
             res.status(400).json({
                 message: 'Insufficient funds in your wallet.',
                 code: 400
             });
         }
         // Update wallet balance of user.
-        const newBalance = userBalance - currentPrice * shares;
+        const newBalance = userBalance - amount;
         user.cashBalance = newBalance;
         // Add this to user's portfolio. Modify portfolio if symbol already exists. 
-        const portfolio = null;
-        const existingPortfolio = await Portfolio.findOne({
+        var portfolio = null;
+        // console.log(user);
+        var existingPortfolio = null;
+        await Portfolio.findOne({
             where: {
                 username: user.username,
                 symbol: symbol,
             }
+        }).then(data => {
+            if(data !== null) {
+                existingPortfolio = data.dataValues;
+            }
         });
+        // console.log(existingPortfolio);
         if(existingPortfolio !== null) {
-            const newShares = existingPortfolio.shares + shares;
+            const newShares = existingPortfolio.shares + numberOfShares;
             existingPortfolio.shares = newShares;
         } else {
             portfolio = await Portfolio.create({
                 username: user.username,
                 symbol: symbol,
-                shares: shares,
+                shares: numberOfShares,
             });
         }
         // Record this buy transaction. 
@@ -108,11 +130,18 @@ router.post('/buy', async (req, res, next) => {
             username: user.username,
             symbol: symbol,
             transactionType: 'buy',
-            shares: shares,
+            shares: numberOfShares,
             price: currentPrice,
         });
         // Save all the changes.
-        user.save();
+        // user.save();
+        User.findOne({
+            where: {
+                email: user.email,
+            }
+        }).then(record => {
+            record.update(user);
+        })
         if(portfolio !== null) {
             portfolio.save();
         } else {
@@ -120,7 +149,7 @@ router.post('/buy', async (req, res, next) => {
         }
         transaction.save();
         res.status(200).json({
-            message: `${shares} shares for ${stock.companyName} bought successfully.`,
+            message: `${amount} shares for ${stock.companyName} bought successfully.`,
             code: 200
         });
     } catch (err) {
