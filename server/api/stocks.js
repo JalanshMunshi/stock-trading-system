@@ -166,7 +166,7 @@ router.post('/sell', async (req, res, next) => {
     try {
         // User must be registered.
         const email = req.body.email;
-        const user = User.findOne({
+        var user = await User.findOne({
             where: {
                 email: email,
             }
@@ -179,10 +179,13 @@ router.post('/sell', async (req, res, next) => {
         }
         // Check if the stock symbol exists in the DB
         const symbol = req.body.symbol;
-        const stock = Stock.findOne({
+        var stock;
+        await Stock.findOne({
             where: {
                 symbol: symbol,
             }
+        }).then(data => {
+            stock = data.dataValues;
         });
         if(stock === null) {
             res.status(400).json({
@@ -191,28 +194,42 @@ router.post('/sell', async (req, res, next) => {
             });
         }
         // User's portfolio must have sufficient shares to carry out this transaction. 
-        const userPortfolio = Portfolio.findOne({
+        const userPortfolio = await Portfolio.findOne({
             where: {
                 username: user.username,
                 symbol: symbol,
             }
         });
+        if(userPortfolio === null) {
+            res.status(400).json({
+                message: 'You do own any shares for this company.',
+                code: 400
+            });
+        }
         const currentShares = userPortfolio.shares;
         const sharesToSell = req.body.shares;
+        if(sharesToSell <= 0) {
+            res.status(400).json({
+                message: 'Please enter valid number of shares.',
+                code: 400
+            });
+        }
         if(sharesToSell > currentShares) {
             res.status(400).json({
-                message: 'Insufficient shares in your portfolio.',
+                message: 'Insufficient shares for this company in your portfolio.',
                 code: 400
             });
         }
         // Update wallet balance of user.
         const currentPrice = stock.price;
         const userBalance = user.cashBalance;
-        const newBalance = userBalance + currentPrice * sharesToSell;
+        const newBalance = parseFloat(userBalance) + parseFloat(currentPrice * sharesToSell);
         user.cashBalance = newBalance;
         // Modify or remove stock from user's portfolio
+        var updatePortfolio = true;
         if(sharesToSell === currentShares) {
             // Remove from user's portfolio.
+            updatePortfolio = false;
             await Portfolio.destroy({
                 where: {
                     username: user.username,
@@ -233,6 +250,9 @@ router.post('/sell', async (req, res, next) => {
         });
         // Save all the changes.
         user.save();
+        if(updatePortfolio) {
+            userPortfolio.save();
+        }
         transaction.save();
         res.status(200).json({
             message: `${sharesToSell} shares for ${stock.companyName} sold successfully.`,

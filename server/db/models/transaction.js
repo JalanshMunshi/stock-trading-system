@@ -17,7 +17,7 @@ const Transaction = db.define('transaction', {
     },
     symbol: {
         type: DataTypes.STRING,
-        unique: true,
+        // unique: true,
         allowNull: false,
         validate: {
             notEmpty: true,

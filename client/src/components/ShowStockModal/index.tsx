@@ -17,11 +17,28 @@ const ShowStockModal = (props: ModalProps) => {
   const [sellAmt, setSellAmt] = useState<Number>();
 
   const handleBuy = () => {
-    console.log(buyAmt);
+    // console.log(buyAmt);
     axios.post(`${URL_PREFIX}/stocks/buy`, {
       email: 'user1@gmail.com',
       symbol: props.stock?.symbol,
       amount: buyAmt,
+    }).then(res => {
+      console.log(res);
+      message.success('Success!');
+    }).catch(err => {
+      console.log(err);
+      message.error("Failed!");
+    });
+    setBuyAmt(Number(''));
+    setBuyStock(false);
+  }
+
+  const handleSell = () => {
+    // console.log(sellAmt);
+    axios.post(`${URL_PREFIX}/stocks/sell`, {
+      email: 'user1@gmail.com',
+      symbol: props.stock?.symbol,
+      shares: sellAmt,
     }).then(res => {
       console.log(res);
       message.success('Success!');
@@ -68,17 +85,16 @@ const ShowStockModal = (props: ModalProps) => {
           <Input placeholder='Amount' style={{ width: '30%' }} onChange={(e) => setBuyAmt(Number(e.target.value))}/>{'  '}
           <Button type='primary' onClick={handleBuy}>Confirm</Button>{'  '}
           <Button danger onClick={() => setBuyStock(false)}>Cancel</Button>
-          <br/><br/>
         </>
         : null
         }
+        <br/><br/>
         <Button type='primary' onClick={() => setSellStock(true)}>Sell</Button>{'  '}
         {sellStock ? 
         <>
-          <Input placeholder='Amount' style={{ width: '30%' }} onChange={(e) => setSellAmt(Number(e.target.value))}/>{'  '}
-          <Button type='primary'>Confirm</Button>{'  '}
+          <Input placeholder='No. of shares' style={{ width: '30%' }} onChange={(e) => setSellAmt(Number(e.target.value))}/>{'  '}
+          <Button type='primary' onClick={handleSell}>Confirm</Button>{'  '}
           <Button danger onClick={() => setSellStock(false)}>Cancel</Button>
-          <br/><br/>
         </>
         : null
         }
