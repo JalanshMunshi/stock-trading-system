@@ -2,26 +2,27 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const bodyParser = require("body-parser");
-const session = require('express-session');
-const passport = require('passport');
-const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const cron = require('node-cron');
+// const session = require('express-session');
+// const passport = require('passport');
+// const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const db = require('./db');
 const { MarketHours, MarketSchedule, User, Stock } = require('./db/models');
-const sessionStore = new SequelizeStore({db});
+// const sessionStore = new SequelizeStore({db});
 
 module.exports = app;
 
 // register passport
-passport.serializeUser((user, done) => done(null, user.user_id));
+// passport.serializeUser((user, done) => done(null, user.user_id));
 
-passport.deserializeUser(async (id, done) => {
-    try {
-        const user = await db.models.user.findByPk(id);
-        done(null, user);
-    } catch (err) {
-        done(err);
-    }
-})
+// passport.deserializeUser(async (id, done) => {
+//     try {
+//         const user = await db.models.user.findByPk(id);
+//         done(null, user);
+//     } catch (err) {
+//         done(err);
+//     }
+// })
 
 // middleware
 app.use(cors());
@@ -30,21 +31,51 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // session middleware
-app.use(
-    session({
-        secret: 'secret',
-        store: sessionStore,
-        resave: false,
-        saveUninitialized: false
-    })
-);
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(
+//     session({
+//         secret: 'secret',
+//         store: sessionStore,
+//         resave: false,
+//         saveUninitialized: false
+//     })
+// );
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // app.use('/auth', require('./auth'));
 app.use('/api', require('./api'));
 
-// Get the db
+cron.schedule('*/5 * * * * *', async () => {
+    await Stock.findAll({
+        order: [
+            ['symbol', 'ASC']
+        ],
+    }).then(data => {
+        // stocks = data;
+        if(data.length) {
+            data.forEach(stock => {
+                var oldPrice = stock.price;
+                console.log(stock.symbol);
+                console.log(oldPrice)
+                const volatility = 0.02;
+                var rnd = Math.random(); // generate number, 0 <= x < 1.0
+                var changePercent = 2 * volatility * rnd;
+                if (changePercent > volatility) {
+                    changePercent -= (2 * volatility);
+                }
+                console.log('here');
+                var changeAmount = oldPrice * changePercent;
+                var newPrice = oldPrice + changeAmount;
+                stock.update({
+                    price: newPrice,
+                });
+                console.log(`Updated price of ${stock.symbol}`);
+            })
+        }
+    });
+})
+
+// Get the db and add some mock data to it
 db.sync().then(() => {
     User.findOne({
         where: {
