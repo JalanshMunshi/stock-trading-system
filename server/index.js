@@ -67,7 +67,7 @@ db.sync().then(() => {
             role: 'customer'
         }
     }).then(data => {
-        console.log(data);
+        // console.log(data);
         if(data.length == 0) {
             User.create({
                 username: 'user1',

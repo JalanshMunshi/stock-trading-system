@@ -7,6 +7,7 @@ import ShowStocks from './components/ShowStocks';
 import MarketHours from './components/MarketHours';
 import MarketSchedule from './components/MarketSchedule';
 import Wallet from './components/Wallet';
+import Transactions from './components/Transactions';
 
 const { Header, Footer, Sider, Content } = Layout;
 const { SubMenu } = Menu;
@@ -58,7 +59,8 @@ function App() {
               {/* <ShowStocks/> */}
               {/* <MarketHours/> */}
               {/* <MarketSchedule/> */}
-              <Wallet/>
+              {/* <Wallet/> */}
+              <Transactions/>
             </Content>
           </Layout>
         </Layout>

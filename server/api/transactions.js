@@ -5,12 +5,13 @@ module.exports = router;
 
 // Get all transactions of a user
 // Request must have email.
-router.get('view-history', async (req, res, next) => {
+router.get('/history/:email', async (req, res, next) => {
     // Get all transactions for a given email
     try {
         // User must be registered.
-        const email = req.body.email;
-        const user = User.findOne({
+        const email = req.params.email;
+        console.log(email);
+        const user = await User.findOne({
             where: {
                 email: email,
             }
@@ -21,8 +22,8 @@ router.get('view-history', async (req, res, next) => {
                 code: 401
             });
         }
-        const transactions = Transaction.findAll({
-            raw: true,
+        var transactions = [];
+        await Transaction.findAll({
             where: {
                 username: user.username,
             },
@@ -35,10 +36,21 @@ router.get('view-history', async (req, res, next) => {
                 'shares',
                 'price',
             ]
+        }).then(data => {
+            var key = 1;
+            data.forEach(dp => {
+                var transaction = {};
+                transaction.key = key.toString();
+                transaction.symbol = dp.dataValues.symbol;
+                transaction.transactionType = dp.dataValues.transactionType;
+                transaction.shares = dp.dataValues.shares;
+                transaction.price = dp.dataValues.price;
+                transactions.push(transaction);
+                key += 1;
+            });
         });
-        res.status(200).json({
-            transactions,
-            code: 200,
+        res.status(200).send({
+            transactions
         })
     } catch (err) {
         next(err);
