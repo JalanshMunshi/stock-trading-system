@@ -7,6 +7,7 @@ const cron = require('node-cron');
 // const passport = require('passport');
 // const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const db = require('./db');
+const moment = require('moment-timezone')
 const { MarketHours, MarketSchedule, User, Stock } = require('./db/models');
 // const sessionStore = new SequelizeStore({db});
 
@@ -45,35 +46,70 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // app.use('/auth', require('./auth'));
 app.use('/api', require('./api'));
 
+const dayMap = {
+    0: 'Sunday',
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+};
+
 cron.schedule('*/5 * * * * *', async () => {
-    await Stock.findAll({
-        order: [
-            ['symbol', 'ASC']
-        ],
-    }).then(data => {
-        // stocks = data;
-        if(data.length) {
-            data.forEach(stock => {
-                var oldPrice = stock.price;
-                console.log(stock.symbol);
-                console.log(oldPrice)
-                const volatility = 0.02;
-                var rnd = Math.random(); // generate number, 0 <= x < 1.0
-                var changePercent = 2 * volatility * rnd;
-                if (changePercent > volatility) {
-                    changePercent -= (2 * volatility);
-                }
-                console.log('here');
-                var changeAmount = oldPrice * changePercent;
-                var newPrice = oldPrice + changeAmount;
-                stock.update({
-                    price: newPrice,
-                });
-                console.log(`Updated price of ${stock.symbol}`);
-            })
+    var marketDayOpen = true, marketTimeOpen = true;
+    const day = dayMap[moment().day()];
+    // console.log(day);
+    await MarketSchedule.findAll().then(data => {
+        // console.log(data[0].dataValues[day]);
+        if(data[0].dataValues[day] == false) {
+            marketDayOpen = false;
         }
     });
-})
+    var startTime, endTime;
+    await MarketHours.findAll().then(data => {
+        startTime = moment(data[0].dataValues.startTime, 'HH:mm:ss');
+        endTime = moment(data[0].dataValues.endTime, 'HH:mm:ss');
+    });
+    var currentTime = moment();
+    // var currentTime = moment().add(1, 'hour'); // This works!
+    // console.log(startTime);
+    // console.log(endTime);
+    // console.log(currentTime);
+    // console.log(currentTime.isBetween(startTime, endTime));
+    if(!currentTime.isBetween(startTime, endTime)) {
+        marketTimeOpen = false;
+    }
+    if(marketDayOpen && marketTimeOpen) {
+        await Stock.findAll({
+            order: [
+                ['symbol', 'ASC']
+            ],
+        }).then(data => {
+            // stocks = data;
+            if(data.length) {
+                data.forEach(stock => {
+                    var oldPrice = stock.price;
+                    console.log(stock.symbol);
+                    console.log(oldPrice)
+                    const volatility = 0.02;
+                    var rnd = Math.random(); // generate number, 0 <= x < 1.0
+                    var changePercent = 2 * volatility * rnd;
+                    if (changePercent > volatility) {
+                        changePercent -= (2 * volatility);
+                    }
+                    console.log('here');
+                    var changeAmount = oldPrice * changePercent;
+                    var newPrice = oldPrice + changeAmount;
+                    stock.update({
+                        price: newPrice,
+                    });
+                    console.log(`Updated price of ${stock.symbol}`);
+                })
+            }
+        });
+    }
+});
 
 // Get the db and add some mock data to it
 db.sync().then(() => {

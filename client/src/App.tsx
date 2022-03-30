@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { Layout, Menu } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
 import AddStock from './components/AddStock';
 import ShowStocks from './components/ShowStocks';
 import MarketHours from './components/MarketHours';
@@ -10,7 +9,7 @@ import Wallet from './components/Wallet';
 import Transactions from './components/Transactions';
 import Portfolio from './components/Portfolio';
 
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Sider, Content } = Layout;
 const { SubMenu } = Menu;
 export const URL_PREFIX = 'http://localhost:5000/api';
 

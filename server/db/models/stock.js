@@ -30,7 +30,16 @@ const Stock = db.define('stock', {
     price: {
         type: DataTypes.FLOAT,
         allowNull: false,
-    }
+    },
+    openingPrice: {
+        type: DataTypes.FLOAT,
+    },
+    high: {
+        type: DataTypes.FLOAT,
+    },
+    low: {
+        type: DataTypes.FLOAT,
+    },
 });
 
 module.exports = Stock;
