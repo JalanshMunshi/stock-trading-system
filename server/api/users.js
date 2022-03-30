@@ -65,7 +65,7 @@ router.post('/withdraw-cash', async (req, res, next) => {
     try {
         const email = req.body.email, cashToWithdraw = req.body.cash;
         // Fetch user
-        const user = User.findOne({
+        const user = await User.findOne({
             where: {
                 email: email,
             }
@@ -73,9 +73,15 @@ router.post('/withdraw-cash', async (req, res, next) => {
         // Check if user exists
         if(user === null) {
             console.log(`User not found: ${email}`);
-            res.status(404).json({
-                message: 'The user does not exist.',
-                code: 404
+            res.status(401).json({
+                message: 'You need to be registered to add cash.',
+                code: 401
+            });
+        }
+        if(cashToWithdraw <= 0) {
+            res.status(400).json({
+                message: 'Please enter a valid amount.',
+                code: 400
             });
         }
         // Check if funds are sufficient
@@ -87,7 +93,7 @@ router.post('/withdraw-cash', async (req, res, next) => {
             });
         }
         // Update balance
-        const newBalance = currentBalance - cashToWithdraw;
+        const newBalance = parseFloat(currentBalance) - parseFloat(cashToWithdraw);
         await user.update({
             cashBalance: newBalance,
         });
