@@ -48,7 +48,7 @@ function AddStock() {
           label="Company Name"
           name="companyName"
           rules={[{ required: true, message: 'Please enter the company name.' }]}
-          style={{width:'30%'}}
+          style={{width:'35%'}}
         >
           <Input placeholder='Amazon' />
         </Form.Item>
