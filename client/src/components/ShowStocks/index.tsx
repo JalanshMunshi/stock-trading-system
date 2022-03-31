@@ -55,7 +55,7 @@ const ShowStocks = () => {
               setStockData(res.data.stocks);
               console.log(res.data.stocks);
             });
-      }, 1000);
+      }, 2000);
       return () => clearInterval(interval);
     // }
   })
