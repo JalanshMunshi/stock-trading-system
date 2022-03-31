@@ -12,6 +12,9 @@ export interface Stock {
   price: Number;
   volume: Number;
   marketCap: Number;
+  openingPrice: Number;
+  high: Number;
+  low: Number;
 }
 
 const ShowStocks = () => {
@@ -43,13 +46,14 @@ const ShowStocks = () => {
   ];
 
   useEffect(() => {
-    if(stockData === undefined) {
+    // if(stockData === undefined) {
       axios.get(`${URL_PREFIX}/stocks/get-stocks`)
           .then(res => {
             // console.log(res.data);
             setStockData(res.data.stocks);
+            console.log(res.data.stocks);
           });
-    }
+    // }
   })
 
   return (

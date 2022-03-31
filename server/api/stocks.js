@@ -15,6 +15,9 @@ router.get('/get-stocks', async (req, res, next) => {
                 'companyName',
                 'volume',
                 'price',
+                'openingPrice',
+                'high',
+                'low',
             ]
         }).then(data => {
             // console.log(data)
@@ -26,6 +29,9 @@ router.get('/get-stocks', async (req, res, next) => {
                 stock.price = dp.dataValues.price;
                 stock.volume = dp.dataValues.volume;
                 stock.marketCap = dp.dataValues.volume * dp.dataValues.price;
+                stock.openingPrice = dp.dataValues.openingPrice;
+                stock.high = dp.dataValues.high;
+                stock.low = dp.dataValues.low;
                 stocks.push(stock);
                 key += 1;
             });

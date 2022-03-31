@@ -56,8 +56,9 @@ const dayMap = {
     6: 'Saturday',
 };
 
-// Runs every second
-cron.schedule('* * * * * *', async () => {
+// Runs every 2 seconds
+// If I run every second, it is too fast. 
+cron.schedule('*/2 * * * * *', async () => {
     var marketDayOpen = true, marketTimeOpen = true;
     const day = dayMap[moment().day()];
     // console.log(day);

@@ -69,14 +69,18 @@ const ShowStockModal = (props: ModalProps) => {
           <Descriptions.Item label='Market Capitalization'>
             {props.stock?.marketCap}
           </Descriptions.Item>
-          {/* <br/><br/> */}
-          {/* <Descriptions.Item label=''>
-            <Button>Buy</Button>
+          <br/><br/>
+          <Descriptions.Item label='Opening Price'>
+            {props.stock?.openingPrice}
           </Descriptions.Item>
           <br/><br/>
-          <Descriptions.Item label=''>
-            <Button>Sell</Button>
-          </Descriptions.Item> */}
+          <Descriptions.Item label='High'>
+            {props.stock?.high}
+          </Descriptions.Item>
+          <br/><br/>
+          <Descriptions.Item label='Low'>
+            {props.stock?.low}
+          </Descriptions.Item>
         </Descriptions>
         <br/>
         <Button type='primary' onClick={() => setBuyStock(true)}>Buy</Button>{'  '}
