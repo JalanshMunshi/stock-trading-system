@@ -4,7 +4,7 @@ const cors = require('cors');
 const bodyParser = require("body-parser");
 const cron = require('node-cron');
 const db = require('./db');
-const moment = require('moment-timezone')
+const moment = require('moment-timezone');
 const { MarketHours, MarketSchedule, User, Stock } = require('./db/models');
 
 module.exports = app;
@@ -82,7 +82,13 @@ cron.schedule('*/2 * * * * *', async () => {
                     // Just a hack to avoid null values. 
                     // Can be deleted after relevant DB changes.
                     if(stock.low === null) {
-                        stock.low = 1000000;
+                        stock.low = price;
+                    }
+                    if(stock.high === null) {
+                        stock.high = stock.price;
+                    }
+                    if(stock.openingPrice === null) {
+                        stock.openingPrice = stock.price;
                     }
                     // Set a new stock price high for the day
                     if(newPrice > stock.high) {

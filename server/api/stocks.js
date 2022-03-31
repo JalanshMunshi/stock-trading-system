@@ -1,6 +1,7 @@
-const { Stock, User, Portfolio, Transaction } = require('../db/models');
+const { Stock, User, Portfolio, Transaction, MarketSchedule, MarketHours } = require('../db/models');
 
 const router = require('express').Router();
+const moment = require('moment-timezone')
 module.exports = router;
 
 router.get('/get-stocks', async (req, res, next) => {
@@ -67,6 +68,12 @@ router.post('/buy', async (req, res, next) => {
             res.status(401).json({
                 message: 'You must be a registered user to carry out a transaction.',
                 code: 401
+            });
+        }
+        // Check market hours
+        if(!isMarketOpen()) {
+            res.status(400).send({
+                message: 'Markets are closed.',
             });
         }
         // Check if the stock symbol exists in the DB
@@ -181,6 +188,12 @@ router.post('/sell', async (req, res, next) => {
             res.status(401).json({
                 message: 'You must be a registered user to carry out a transaction.',
                 code: 401
+            });
+        }
+        // Check market hours
+        if(!isMarketOpen()) {
+            res.status(400).send({
+                message: 'Markets are closed.',
             });
         }
         // Check if the stock symbol exists in the DB
@@ -308,3 +321,40 @@ router.post('/admin/create-new-stock', async (req, res, next) => {
         next(err);
     }
 });
+
+const dayMap = {
+    0: 'Sunday',
+    1: 'Monday',
+    2: 'Tuesday',
+    3: 'Wednesday',
+    4: 'Thursday',
+    5: 'Friday',
+    6: 'Saturday',
+};
+
+async function isMarketOpen() {
+    var marketDayOpen = true, marketTimeOpen = true;
+    const day = dayMap[moment().day()];
+    // console.log(day);
+    await MarketSchedule.findAll().then(data => {
+        // console.log(data[0].dataValues[day]);
+        if(data[0].dataValues[day] == false) {
+            marketDayOpen = false;
+        }
+    });
+    var startTime, endTime;
+    await MarketHours.findAll().then(data => {
+        startTime = moment(data[0].dataValues.startTime, 'HH:mm:ss');
+        endTime = moment(data[0].dataValues.endTime, 'HH:mm:ss');
+    });
+    var currentTime = moment();
+    // var currentTime = moment().add(1, 'hour'); // This works!
+    // console.log(startTime);
+    // console.log(endTime);
+    // console.log(currentTime);
+    // console.log(currentTime.isBetween(startTime, endTime));
+    if(!currentTime.isBetween(startTime, endTime)) {
+        marketTimeOpen = false;
+    }
+    return (marketDayOpen && marketTimeOpen);
+}

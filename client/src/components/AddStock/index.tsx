@@ -23,7 +23,7 @@ function AddStock() {
     }).catch((err) => {
       message.error('The stock could not be added.');
     });
-    // form.resetFields();
+    form.resetFields();
   };
 
   return (

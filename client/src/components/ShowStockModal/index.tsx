@@ -27,7 +27,7 @@ const ShowStockModal = (props: ModalProps) => {
       message.success('Success!');
     }).catch(err => {
       console.log(err);
-      message.error("Failed!");
+      message.error("Markets are closed or there is an error!");
     });
     setBuyAmt(Number(''));
     setBuyStock(false);
@@ -44,10 +44,10 @@ const ShowStockModal = (props: ModalProps) => {
       message.success('Success!');
     }).catch(err => {
       console.log(err);
-      message.error("Failed!");
+      message.error("Markets are closed or there is an error!");
     });
-    setBuyAmt(Number(''));
-    setBuyStock(false);
+    setSellAmt(Number(''));
+    setSellStock(false);
   }
   
   return (

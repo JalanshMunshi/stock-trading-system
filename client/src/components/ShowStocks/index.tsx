@@ -47,6 +47,7 @@ const ShowStocks = () => {
 
   useEffect(() => {
     // if(stockData === undefined) {
+      // Call the stock API every 2 seconds. 
       const interval = setInterval(() => {
         axios.get(`${URL_PREFIX}/stocks/get-stocks`)
             .then(res => {
