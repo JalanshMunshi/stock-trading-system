@@ -124,7 +124,7 @@ router.post('/buy', async (req, res, next) => {
             }
         }).then(data => {
             if(data !== null) {
-                existingPortfolio = data.dataValues;
+                existingPortfolio = data;
             }
         });
         // console.log(existingPortfolio);

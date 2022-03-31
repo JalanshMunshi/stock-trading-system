@@ -38,11 +38,12 @@ const Transactions = () => {
     },
   ];
   useEffect(() => {
-    axios.get(`${URL_PREFIX}/transactions/history/user1@gmail.com`)
-        .then(res => {
-          setTransactionData(res.data.transactions);
-        });
-    console.log(transactionData);
+    if(transactionData === undefined) {
+      axios.get(`${URL_PREFIX}/transactions/history/user1@gmail.com`)
+          .then(res => {
+            setTransactionData(res.data.transactions);
+          });
+    }
   })
   return (
     <>

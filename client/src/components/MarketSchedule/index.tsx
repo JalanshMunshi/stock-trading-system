@@ -61,6 +61,11 @@ const MarketSchedule = () => {
     axios.post(`${URL_PREFIX}/markets/admin/change-market-schedule`, {
       email: 'admin@stockup.com',
       schedule: requestData,
+    }).then(res => {
+      message.success(res.data.message);
+    }).catch(err => {
+      console.log(err);
+      message.error('Error.');
     })
   }
   
