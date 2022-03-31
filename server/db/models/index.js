@@ -5,6 +5,9 @@ const Transaction = require('./transaction');
 const MarketHours = require('./marketHours');
 const MarketSchedule = require('./marketSchedule');
 
+// It turns out these relationships are useless as I already designed the DB 
+// considering all the 1:N and M:N relationships. As BCNF as possible.
+
 // M:N relationship beween stock and portfolio
 // Portfolio.belongsToMany(Stock, {
 //   through: {model: Transaction, unique: false},

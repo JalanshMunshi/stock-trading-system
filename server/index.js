@@ -3,27 +3,11 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require("body-parser");
 const cron = require('node-cron');
-// const session = require('express-session');
-// const passport = require('passport');
-// const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const db = require('./db');
 const moment = require('moment-timezone')
 const { MarketHours, MarketSchedule, User, Stock } = require('./db/models');
-// const sessionStore = new SequelizeStore({db});
 
 module.exports = app;
-
-// register passport
-// passport.serializeUser((user, done) => done(null, user.user_id));
-
-// passport.deserializeUser(async (id, done) => {
-//     try {
-//         const user = await db.models.user.findByPk(id);
-//         done(null, user);
-//     } catch (err) {
-//         done(err);
-//     }
-// })
 
 // middleware
 app.use(cors());
@@ -31,19 +15,6 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// session middleware
-// app.use(
-//     session({
-//         secret: 'secret',
-//         store: sessionStore,
-//         resave: false,
-//         saveUninitialized: false
-//     })
-// );
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// app.use('/auth', require('./auth'));
 app.use('/api', require('./api'));
 
 const dayMap = {
@@ -139,6 +110,11 @@ cron.schedule('*/2 * * * * *', async () => {
 });
 
 // Get the db and add some mock data to it
+// Uncomment the next 3 lines to drop the DB and create a new one. 
+// If you uncomment, do comment the next db.sync() statement.
+// db.sync({ force: true }).then(() => {
+//     console.log("Drop and re-sync db.");
+// });
 db.sync().then(() => {
     User.findOne({
         where: {
@@ -235,10 +211,6 @@ db.sync().then(() => {
         }
     });
 });
-
-// db.sync({ force: true }).then(() => {
-//     console.log("Drop and re-sync db.");
-// });
 
 console.log('Connected to DB...');
 
