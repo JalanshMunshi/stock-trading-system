@@ -56,7 +56,8 @@ const dayMap = {
     6: 'Saturday',
 };
 
-cron.schedule('*/5 * * * * *', async () => {
+// Runs every second
+cron.schedule('* * * * * *', async () => {
     var marketDayOpen = true, marketTimeOpen = true;
     const day = dayMap[moment().day()];
     // console.log(day);
@@ -90,21 +91,46 @@ cron.schedule('*/5 * * * * *', async () => {
             if(data.length) {
                 data.forEach(stock => {
                     var oldPrice = stock.price;
-                    console.log(stock.symbol);
-                    console.log(oldPrice)
+                    // console.log(stock.symbol);
+                    // console.log(oldPrice)
                     const volatility = 0.02;
                     var rnd = Math.random(); // generate number, 0 <= x < 1.0
                     var changePercent = 2 * volatility * rnd;
                     if (changePercent > volatility) {
                         changePercent -= (2 * volatility);
                     }
-                    console.log('here');
                     var changeAmount = oldPrice * changePercent;
                     var newPrice = oldPrice + changeAmount;
+                    // Update the opening price of all stocks
+                    if(currentTime.isSame(startTime)) {
+                        stock.update({
+                            openingPrice: newPrice,
+                        });
+                    }
+                    // Just a hack to avoid null values. 
+                    // Can be deleted after relevant DB changes.
+                    if(stock.low === null) {
+                        stock.low = 1000000;
+                    }
+                    // Set a new stock price high for the day
+                    if(newPrice > stock.high) {
+                        // console.log(`Changed high for ${stock.symbol}.`);
+                        stock.update({
+                            high: newPrice,
+                        });
+                    }
+                    // Set a new stock price low for the day
+                    if(newPrice < stock.low) {
+                        // console.log(`Changed low for ${stock.symbol}.`);
+                        stock.update({
+                            low: newPrice,
+                        });
+                    }
+                    // Update the current price.
                     stock.update({
                         price: newPrice,
                     });
-                    console.log(`Updated price of ${stock.symbol}`);
+                    // console.log(`Updated price of ${stock.symbol}`);
                 })
             }
         });
@@ -160,18 +186,27 @@ db.sync().then(() => {
                 companyName: 'company1',
                 volume: 1000,
                 price: 10.5,
+                high: 10.5,
+                low: 10.5,
+                openingPrice: 10.5,
             });
             Stock.create({
                 symbol: 'BB',
                 companyName: 'company2',
                 volume: 2000,
                 price: 15.5,
+                high: 15.5,
+                low: 15.5,
+                openingPrice: 15.5,
             });
             Stock.create({
                 symbol: 'CC',
                 companyName: 'company3',
                 volume: 1500,
                 price: 20.12,
+                high: 20.12,
+                low: 20.12,
+                openingPrice: 20.12,
             });
         }
     })

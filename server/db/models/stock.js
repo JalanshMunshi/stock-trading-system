@@ -33,12 +33,15 @@ const Stock = db.define('stock', {
     },
     openingPrice: {
         type: DataTypes.FLOAT,
+        default: 0.0,
     },
     high: {
         type: DataTypes.FLOAT,
+        default: 0.0
     },
     low: {
         type: DataTypes.FLOAT,
+        default: 1000000,
     },
 });
 
