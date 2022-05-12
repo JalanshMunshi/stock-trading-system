@@ -1,12 +1,13 @@
 # Stock Trading System
 
-## Key Components
+This project was a part of an assigment and the following functionalities were implemented. 
 
-`/server/index.js` sets up the entire backend by adding all the dependencies of the node backend. This file also has the main cron job for changing the stock prices.
-`/server/api` has the API end-points for all the pages of the application. 
-`/server/db` sets up the database for this project and `server/db/models` has all the relations. 
+- User can create an account, buy/sell stocks, deposit/withdraw cash from wallet, view their portfolio.
+-  An admin user can create a new stock, change market hours and market schedule. 
+- Stocks are displayed on the landing page and changes must be visible dynamically. 
+- Stock prices randomly fluctuate during the active trading hours. 
 
-`/client/src` has all the UI components for the application. 
+Currently, authentication is absent and can be implemented as a future task. 
 
 ## Installation
 
@@ -23,5 +24,3 @@
 11. In another terminal run `cd client` followed by `npm start`. 
 
 If everything goes well, you should be able to see the `Stocks` page of the application. 
-
-For deploying, run `npm build` inside the `client` directory. Upload the entore project on [Heroku](https://www.heroku.com/) or [Netlify](https://app.netlify.com/) and adjust the settings as per your requirement. 
